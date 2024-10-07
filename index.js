@@ -33,6 +33,7 @@ const sendMail = async (transporter, mailOptions) => {
 }
 
 const getDataFromDatabase = async () => {
+    console.log("Script run at " + moment().format('YYYY-MM-DD HH:mm:ss'));
     const db = await client();
     try {
         console.log("starting query");
