@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const client = require('./db');
 const moment = require('moment');
+const { ENV } = require('./env');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
@@ -9,15 +10,15 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: process.env.EMAIL,
-        pass: process.env.PASSWORD
+        user: ENV.EMAIL,
+        pass: ENV.PASSWORD
     }
 });
 
 const mailOptions = {
     from: {
         name: "Product RTS",
-        address: process.env.EMAIL
+        address: ENV.EMAIL
     },
     to: ["andri@rts.id"],
     subject: "Transactions Summary",
