@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const client = require('./db');
 const moment = require('moment');
-const { ENV } = require('./env');
+const ENV = require('./env');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
