@@ -44,23 +44,27 @@ const getDataFromDatabase = async () => {
     const summaryPerMonth = `
         SELECT masterreseller.NAMARESELLER, 
         COUNT(idtransaksi) as JumlahTransaksi, 
-        FORMAT(SUM(CASE WHEN STATUSTRANSAKSI = 1 THEN HARGAJUAL-HARGABELI ELSE 0 END), 0) as Total
+        COALESCE(SUM(HARGAJUAL-HARGABELI), 0) as Total
         FROM masterreseller
         LEFT JOIN transaksi_his
         ON transaksi_his.NamaReseller = masterreseller.NAMARESELLER
         AND TANGGAL BETWEEN ? AND ?
+        and transaksi_his.STATUSTRANSAKSI = 1
+        and transaksi_his.JENISTRANSAKSI = (1 or 6)
         GROUP BY NamaReseller
-        ORDER BY JumlahTransaksi DESC`;
+        ORDER BY JumlahTransaksi DESC;`;
     const summaryPerDay = `
         SELECT masterreseller.NAMARESELLER, 
         COUNT(idtransaksi) as JumlahTransaksi, 
-        FORMAT(SUM(CASE WHEN STATUSTRANSAKSI = 1 THEN HARGAJUAL-HARGABELI ELSE 0 END), 0) as Total
+		    COALESCE(SUM(HARGAJUAL-HARGABELI), 0) as Total
         FROM masterreseller 
         LEFT JOIN transaksi_his
         ON transaksi_his.NamaReseller = masterreseller.NAMARESELLER
         AND TANGGAL = ?
+        and transaksi_his.STATUSTRANSAKSI = 1
+		    and transaksi_his.JENISTRANSAKSI = (1 or 6)
         GROUP BY masterreseller.NAMARESELLER
-        ORDER BY JumlahTransaksi DESC`;
+        ORDER BY JumlahTransaksi desc;`;
     const startOfMonth = moment().subtract(1, 'days').startOf('month').format('YYYY-MM-DD');
     const yesterday = moment().subtract(1, 'days').format('YYYY-MM-DD');
     const values = [startOfMonth, yesterday];
@@ -102,11 +106,11 @@ const generateEmailData = async (data) => {
       <tr>
         <td>${item.NAMARESELLER}</td>
         <td>${item.JumlahTransaksi}</td>
-        <td>${Number(item.Total.replace(/,/g, ''))}</td>
+        <td>${item.Total}</td>
       </tr>`;
   });
   let totalTransactions = data.reduce((acc, item) => acc + item.JumlahTransaksi, 0);
-  let totalRevenue = data.reduce((acc, item) => acc + Number(item.Total.replace(/,/g, '')), 0);
+  let totalRevenue = data.reduce((acc, item) => acc + item.Total, 0);
 
   let formattedTotalRevenue = new Intl.NumberFormat('de-DE').format(totalRevenue);
   table += `
