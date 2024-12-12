@@ -50,7 +50,7 @@ const getDataFromDatabase = async () => {
         ON transaksi_his.NamaReseller = masterreseller.NAMARESELLER
         AND TANGGAL BETWEEN ? AND ?
         and transaksi_his.STATUSTRANSAKSI = 1
-        and (transaksi_his.JENISTRANSAKSI = 1 or transaksi_his.JENISTRANSAKSI = 6)
+        and (transaksi_his.JENISTRANSAKSI in (0,1,6))
         GROUP BY NamaReseller
         ORDER BY JumlahTransaksi DESC;`;
     const summaryPerDay = `
@@ -62,7 +62,7 @@ const getDataFromDatabase = async () => {
         ON transaksi_his.NamaReseller = masterreseller.NAMARESELLER
         AND TANGGAL = ?
         and transaksi_his.STATUSTRANSAKSI = 1
-		    and (transaksi_his.JENISTRANSAKSI = 1 or transaksi_his.JENISTRANSAKSI = 6)
+		    and (transaksi_his.JENISTRANSAKSI in (0,1,6))
         GROUP BY masterreseller.NAMARESELLER
         ORDER BY JumlahTransaksi desc;`;
     const startOfMonth = moment().subtract(1, 'days').startOf('month').format('YYYY-MM-DD');
