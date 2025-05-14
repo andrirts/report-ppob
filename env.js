@@ -1,6 +1,6 @@
 const ENV = {
     EMAIL: 'prod.solution@rts.id',
-    PASSWORD: 'ziwo nwff tldb gzpq'
+    PASSWORD: 'zhcx evse eydn ssxk'
 }
 
 module.exports = ENV;
