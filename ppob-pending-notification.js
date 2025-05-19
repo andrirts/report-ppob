@@ -3,6 +3,7 @@ const client = require('./db');
 const ENV = require('./env');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -67,4 +68,7 @@ const getDataFromDatabase = async () => {
         }
     }
 }
-getDataFromDatabase();
+
+cron.schedule('*/10 * * * *', async () => {
+    await getDataFromDatabase();
+});
