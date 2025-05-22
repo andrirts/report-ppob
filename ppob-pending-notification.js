@@ -64,13 +64,20 @@ const getDataFromDatabase = async () => {
             });
         } else {
             console.log(err)
-            await db.end();
+            if (db) {
+                await db.end();
+            }
+            throw err;
         }
     }
 }
 
 cron.schedule('*/10 * * * *', async () => {
-    await getDataFromDatabase();
+    try {
+        await getDataFromDatabase();
+    } catch (err) {
+        console.log(err, "Error in cron job", moment().format('YYYY-MM-DD HH:mm:ss'));
+    }
 });
 
 // getDataFromDatabase();
