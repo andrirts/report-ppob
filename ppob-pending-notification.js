@@ -42,7 +42,7 @@ const getDataFromDatabase = async () => {
         const checkPending = `
             SELECT COUNT(idtransaksi) AS jumlah_transaksi
             FROM transaksi
-            WHERE STATUSTRANSAKSI = 8
+            WHERE STATUSTRANSAKSI NOT IN (1, 2)
             OR Keterangan REGEXP 'RESULTCODE:(68|91|96)'
             AND JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME();
         `;
@@ -72,3 +72,5 @@ const getDataFromDatabase = async () => {
 cron.schedule('*/10 * * * *', async () => {
     await getDataFromDatabase();
 });
+
+// getDataFromDatabase();
