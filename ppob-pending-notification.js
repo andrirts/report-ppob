@@ -21,7 +21,7 @@ const mailOptions = {
         name: "Product RTS",
         address: ENV.EMAIL
     },
-    to: ['prod@rts.id'],
+    to: ['prod@rts.id', 'cs@rts.id'],
     subject: "RTS Sync : PPOB Alert System",
 }
 
