@@ -39,6 +39,12 @@ const getDataFromDatabase = async () => {
     try {
         const db = await client();
         console.log("starting query");
+
+        const totalTransactionsToday = `
+            SELECT COUNT(idtransaksi) AS countTransactions
+            FROM transaksi;
+        `;
+
         const finnetPendingTransactions = `
             SELECT COUNT(idtransaksi) AS countTransactions, KodeProduk , namaterminal,idtransaksi
             FROM transaksi
@@ -87,8 +93,9 @@ const getDataFromDatabase = async () => {
             OR Keterangan REGEXP '(RC: 77|RC:16)'
             OR Keterangan REGEXP '(U03|U01|U02|S00|P04|S02|U04|P27)'
             OR Keterangan like '%PRODUK GANGGUAN%';
-        `
+        `;
 
+        const [totalTransactions] = await db.query(totalTransactionsToday);
         const [pendingTransactionsToday] = await db.query(queryPendingTransactionsToday);
         const [finnetPending] = await db.query(finnetPendingTransactions);
         const [sakalagunaPending] = await db.query(sakalagunaPendingTransactions);
@@ -143,11 +150,13 @@ const getDataFromDatabase = async () => {
 
         const htmlContent = `
             <h2>RTS Sync : PPOB Alert System</h2>
-            <p>Pending Transactions Today: ${pendingTransactionsToday[0].countTransactions}</p>
-            <p>Current Pending Transactions: ${currentPendingTransactions}</p>
+            <h4 style="margin: 0;">Date : ${moment().format('DD/MM/YYYY')}</h4>
+            <p style="margin: 0;">Total Transaction Today : ${totalTransactions[0].countTransactions}</p>
+            <p style="margin: 0;">Pending Transaction Today: ${pendingTransactionsToday[0].countTransactions}</p>
+            <p style="margin: 0;">Pending Transaction in last 10 minutes : ${currentPendingTransactions}</p>
             <h3>Pending Transactions by Supplier:</h3>
             <ul>
-                ${listProductCodePending.map(item => `<li>${item.terminalName} - ${item.productCode}: ${item.countTransactions} transactions</li>`).join('')}
+                ${listProductCodePending.map(item => `<li>${item.terminalName} - ${item.productCode}: ${item.countTransactions}</li>`).join('')}
             </ul>
         `
 
