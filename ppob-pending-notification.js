@@ -3,7 +3,6 @@ const client = require('./db');
 const ENV = require('./env');
 require('dotenv').config();
 const nodemailer = require('nodemailer');
-const cron = require('node-cron');
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -33,6 +32,8 @@ const sendMail = async (transporter, mailOptions) => {
         console.log(err)
     }
 }
+
+let i = 0;
 
 const getDataFromDatabase = async () => {
     console.log("Script run at " + moment().format('YYYY-MM-DD HH:mm:ss'));
@@ -171,12 +172,21 @@ const getDataFromDatabase = async () => {
     } catch (err) {
         console.log("Error in getDataFromDatabase: ", err);
         if (err.code === 'ETIMEDOUT') {
-            console.log("Database connection timed out. Please check your database connection.", err.message);
-            await sendMail(transporter, {
-                ...mailOptions,
-                text: "RTS Sync, Database connection timed out. Please check your database connection.",
-                subject: "RTS Sync : PPOB Down System Alert",
-            });
+            // I want to retry the connection
+            if (i < 3) {
+                i++;
+                console.log("Database connection timed out. Retrying...");
+                await new Promise(resolve => setTimeout(resolve, 5000)); // wait for 5 seconds before retrying
+                return getDataFromDatabase();
+            } else {
+                console.log("Database connection timed out. Please check your database connection.", err.message);
+                await sendMail(transporter, {
+                    ...mailOptions,
+                    text: "RTS Sync, Database connection timed out. Please check your database connection.",
+                    subject: "RTS Sync : PPOB Down System Alert",
+                });
+            }
+
         } else {
             console.log(err)
             if (db) {
@@ -199,3 +209,11 @@ executePeriodically = async () => {
 }
 
 executePeriodically();
+
+// (async () => {
+//     try {
+//         await getDataFromDatabase();
+//     } catch (err) {
+//         console.log(err, "Error in executePeriodically", moment().format('YYYY-MM-DD HH:mm:ss'));
+//     }
+// })();
