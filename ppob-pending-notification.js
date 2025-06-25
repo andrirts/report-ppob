@@ -168,6 +168,7 @@ const getDataFromDatabase = async () => {
             });
         }
         console.log("System Update : ", moment().format('YYYY-MM-DD HH:mm:ss'));
+        i = 0;
         await db.end();
     } catch (err) {
         console.log("Error in getDataFromDatabase: ", err);
@@ -185,6 +186,7 @@ const getDataFromDatabase = async () => {
                     text: "RTS Sync, Database connection timed out. Please check your database connection.",
                     subject: "RTS Sync : PPOB Down System Alert",
                 });
+                i = 0;
             }
 
         } else {
