@@ -117,10 +117,10 @@ const getDataFromDatabase = async () => {
   }
 };
 
-// cron.schedule("5 8 * * *", async () => {
-//   await getDataFromDatabase();
-// });
-
-(async () => {
+cron.schedule("5 8 * * *", async () => {
   await getDataFromDatabase();
-})();
+});
+
+// (async () => {
+//   await getDataFromDatabase();
+// })();
