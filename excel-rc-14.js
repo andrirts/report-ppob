@@ -26,7 +26,17 @@ const mailOptions = {
     name: "Product RTS",
     address: ENV.EMAIL,
   },
-  to: ["prod@rts.id"],
+  to: ["aris.riadi@finnet.co.id", "argy@finnet.co.id", "sherin@finnet.co.id"],
+  cc: [
+    "prod@rts.id",
+    "biz@rts.id",
+    "fakhrudin@rts.id",
+    "ananto@rts.id",
+    "finoperation@rts.id",
+    "ita.widyarini@gmail.com",
+    "eko@rts.id",
+    "zabil@rts.id",
+  ],
   subject: "Handling RC 14 Finnet",
 };
 
@@ -87,7 +97,7 @@ const getDataFromDatabase = async () => {
       });
     });
 
-    const fileName = `RC_14.xlsx`;
+    const fileName = `RC_14_${yesterday}.xlsx`;
     await workbook.xlsx.writeFile(fileName);
     console.log(`File saved as ${fileName}`);
     mailOptions.attachments = [
@@ -102,7 +112,32 @@ const getDataFromDatabase = async () => {
     - RC Channel<br>
     - Description<br>
     - RC Biller<br>
-<br>Terima kasih.</p>`;
+<br>Terima kasih.</p>
+    <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333; line-height: 1.3;">
+  <tr>
+    <td><strong style="font-size: 13px;">Salam,</strong></td>
+  </tr>
+  <tr>
+    <td style="padding: 2px 0 0 0;">
+      <strong style="font-size: 16px; color: #333;">Product & Solution</strong>
+    </td>
+  </tr>
+  <tr>
+    <td><span style="color: #5c9bd3;">PT. Rajawali Telekomunikasi Selular</span></td>
+  </tr>
+  <tr>
+    <td>0811-1987-827</td>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://rts.id" style="color: #0073e6; text-decoration: none;">https://rts.id</a>
+    </td>
+  </tr>
+  <tr>
+    <td>Atria @Sudirman - Lt. 22, Jakarta Pusat, Indonesia 10220</td>
+  </tr>
+</table>
+`;
 
     await sendMail(transporter, mailOptions);
 
@@ -117,10 +152,10 @@ const getDataFromDatabase = async () => {
   }
 };
 
-cron.schedule("5 8 * * *", async () => {
-  await getDataFromDatabase();
-});
-
-// (async () => {
+// cron.schedule("5 8 * * *", async () => {
 //   await getDataFromDatabase();
-// })();
+// });
+
+(async () => {
+  await getDataFromDatabase();
+})();
