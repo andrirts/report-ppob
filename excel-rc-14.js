@@ -6,8 +6,6 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 const ExcelJs = require("exceljs");
-const workbook = new ExcelJs.Workbook();
-const worksheet = workbook.addWorksheet("Sheet1");
 const cron = require("node-cron");
 
 const transporter = nodemailer.createTransport({
@@ -51,6 +49,8 @@ const sendMail = async (transporter, mailOptions) => {
 
 const getDataFromDatabase = async () => {
   console.log("Script run at " + moment().format("YYYY-MM-DD HH:mm:ss"));
+  const workbook = new ExcelJs.Workbook();
+  const worksheet = workbook.addWorksheet("Sheet1");
   const db = await client();
   try {
     console.log("starting query");
@@ -152,10 +152,10 @@ const getDataFromDatabase = async () => {
   }
 };
 
-// cron.schedule("5 8 * * *", async () => {
-//   await getDataFromDatabase();
-// });
-
-(async () => {
+cron.schedule("5 8 * * *", async () => {
   await getDataFromDatabase();
-})();
+});
+
+// (async () => {
+//   await getDataFromDatabase();
+// })();
