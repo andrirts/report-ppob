@@ -26,7 +26,8 @@ const mailOptions = {
     name: "Product RTS",
     address: ENV.EMAIL,
   },
-  to: ["andri@rts.id"],
+  to: ["operation@rts.id"],
+  cc: ["ops@rts.id", "prod@rts.id"],
 };
 
 const sendMail = async (transporter, mailOptions) => {
