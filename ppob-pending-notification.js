@@ -193,7 +193,7 @@ const getDataFromDatabase = async () => {
             </ul>
         `;
 
-    if (currentPendingTransactions > 10) {
+    if (currentPendingTransactions > 25) {
       await sendMail(transporter, {
         ...mailOptions,
         html: htmlContent,
