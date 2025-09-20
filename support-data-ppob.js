@@ -47,7 +47,7 @@ const getDataFromDatabase = async (yesterday) => {
   try {
     const db = await client();
     const query = `SELECT th.TANGGAL, th.NamaReseller, th.JAM, p.NAMAPRODUK, th.IdTransaksiClient, th.idtransaksi, p.KodeProduk, th.Tujuan, th.HARGAJUAL, th.STATUSTRANSAKSI, th.SN, mr.email 
-      FROM transaksi_his th
+      FROM transaksi th
       JOIN produk p
       ON p.KodeProduk = th.KodeProduk
       JOIN masterreseller mr
