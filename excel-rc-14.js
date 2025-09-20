@@ -56,7 +56,7 @@ const getDataFromDatabase = async () => {
     console.log("starting query");
     const summaryPerDay = `
         SELECT idtransaksi,TANGGAL ,JAM , Tujuan , KodeProduk , NamaReseller , keterangan
-        FROM avr.transaksi_his
+        FROM avr.transaksi
         where TANGGAL = ?
         and keterangan like "%RESULTCODE:14%";`;
     const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");

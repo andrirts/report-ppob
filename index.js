@@ -56,12 +56,12 @@ const getDataFromDatabase = async () => {
         COUNT(idtransaksi) as JumlahTransaksi, 
 		    COALESCE(SUM(HARGAJUAL-HARGABELI), 0) as Total
         FROM masterreseller 
-        LEFT JOIN transaksi_his
-        ON transaksi_his.NamaReseller = masterreseller.NAMARESELLER
+        LEFT JOIN transaksi
+        ON transaksi.NamaReseller = masterreseller.NAMARESELLER
         AND TANGGAL = ?
-        and transaksi_his.STATUSTRANSAKSI = 1
-		    and (transaksi_his.JENISTRANSAKSI in (0,1,6))
-        and transaksi_his.NamaReseller not regexp 'DEV|TEST'
+        and transaksi.STATUSTRANSAKSI = 1
+		    and (transaksi.JENISTRANSAKSI in (0,1,6))
+        and transaksi.NamaReseller not regexp 'DEV|TEST'
         GROUP BY masterreseller.NAMARESELLER
         ORDER BY JumlahTransaksi desc;`;
     const startOfMonth = moment()
