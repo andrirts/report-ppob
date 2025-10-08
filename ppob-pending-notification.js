@@ -43,7 +43,8 @@ const getDataFromDatabase = async () => {
 
     const totalTransactionsToday = `
             SELECT COUNT(idtransaksi) AS countTransactions
-            FROM transaksi;
+            FROM transaksi
+            WHERE TANGGAL = CURDATE();
         `;
 
     const finnetPendingTransactions = `
@@ -52,6 +53,7 @@ const getDataFromDatabase = async () => {
             WHERE JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME()
             AND namaterminal = 'FINNET'
             AND (Keterangan REGEXP 'RESULTCODE:(68|91|96)'
+            AND TANGGAL = CURDATE()
             OR STATUSTRANSAKSI NOT IN (1, 2))
             GROUP BY KodeProduk ;
         `;
@@ -63,6 +65,7 @@ const getDataFromDatabase = async () => {
             AND JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME()
             AND namaterminal = 'SAKALAGUNA'
             AND Keterangan like '%PRODUK GANGGUAN%'
+            AND TANGGAL = CURDATE()
             GROUP BY KodeProduk ;
         `;
 
@@ -73,6 +76,7 @@ const getDataFromDatabase = async () => {
             AND JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME()
             AND namaterminal = 'SAT PROD'
             AND Keterangan REGEXP '(U03|U01|U02|S00|P04|S02|U04|P27)'
+            AND TANGGAL = CURDATE()
             GROUP BY KodeProduk ;
         `;
 
@@ -83,6 +87,7 @@ const getDataFromDatabase = async () => {
             AND JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME()
             AND namaterminal = 'RAJA BILLER'
             AND Keterangan REGEXP '(RC: 77|RC:16)'
+            AND TANGGAL = CURDATE()
             GROUP BY KodeProduk ;
         `;
     const cnetPendingTransactions = `
@@ -91,17 +96,20 @@ const getDataFromDatabase = async () => {
             WHERE STATUSTRANSAKSI NOT IN (1, 2)
             AND JAM BETWEEN CURTIME() - INTERVAL 10 MINUTE AND CURTIME()
             AND namaterminal = 'CNET'
+            AND TANGGAL = CURDATE()
             GROUP BY KodeProduk ;
         `;
 
     const queryPendingTransactionsToday = `
             SELECT COUNT(idtransaksi) AS countTransactions
             FROM transaksi
-            WHERE STATUSTRANSAKSI NOT IN (1, 2)
+            WHERE (STATUSTRANSAKSI NOT IN (1, 2)
             OR Keterangan REGEXP 'RESULTCODE:(68|91|96)'
             OR Keterangan REGEXP '(RC: 77|RC:16)'
             OR Keterangan REGEXP '(U03|U01|U02|S00|P04|S02|U04|P27)'
-            OR Keterangan like '%PRODUK GANGGUAN%';
+            OR Keterangan like '%PRODUK GANGGUAN%')
+            AND TANGGAL = CURDATE()
+            ;
         `;
 
     const [totalTransactions] = await db.query(totalTransactionsToday);
