@@ -46,7 +46,7 @@ const getDataFromDatabase = async (yesterday) => {
 
   try {
     const db = await client();
-    const query = `SELECT th.TANGGAL, th.NamaReseller, th.JAM, p.NAMAPRODUK, th.IdTransaksiClient, th.idtransaksi, p.KodeProduk, th.Tujuan, th.HARGAJUAL, th.STATUSTRANSAKSI, th.SN, mr.email 
+    const query = `SELECT th.TANGGAL, th.NamaReseller, th.JAM, p.NAMAPRODUK, th.IdTransaksiClient, th.idtransaksi, p.KodeProduk, th.Tujuan, th.HARGAJUAL, th.HARGABELI, th.STATUSTRANSAKSI, th.SN, mr.email, th.namaterminal 
       FROM transaksi th
       JOIN produk p
       ON p.KodeProduk = th.KodeProduk
@@ -61,16 +61,18 @@ const getDataFromDatabase = async (yesterday) => {
 
     worksheet.columns = [
       { header: "Date", key: "date", width: 30 },
+      { header: "Trx Reff Id", key: "trxReffId", width: 30 },
+      { header: "Partner Reff", key: "partnerReff", width: 30 },
       { header: "Transaction Date", key: "transactionDate", width: 30 },
       { header: "Nama Reseller", key: "namaReseller", width: 30 },
-      { header: "Product Name", key: "productName", width: 30 },
-      { header: "Partner Reff", key: "partnerReff", width: 30 },
-      { header: "Trx Reff Id", key: "trxReffId", width: 30 },
-      { header: "Kode Produk", key: "kodeProduk", width: 30 },
       { header: "Tujuan", key: "tujuan", width: 30 },
-      { header: "Harga", key: "harga", width: 30 },
+      { header: "Kode Produk", key: "kodeProduk", width: 30 },
+      { header: "Product Name", key: "productName", width: 30 },
+      { header: "Harga Beli", key: "hargaBeli", width: 30 },
+      { header: "Harga Jual", key: "hargaJual", width: 30 },
       { header: "Status", key: "status", width: 30 },
       { header: "Serial Number", key: "serialNumber", width: 30 },
+      { header: "Nama Terminal", key: "namaTerminal", width: 30 },
       { header: "Begin Balance", key: "beginBalance", width: 30 },
       { header: "Email Reseller", key: "emailReseller", width: 30 },
     ];
@@ -109,16 +111,18 @@ const getDataFromDatabase = async (yesterday) => {
 
       worksheet.addRow({
         date: formatTanggal,
+        trxReffId: row.idtransaksi,
+        partnerReff: row.IdTransaksiClient,
         transactionDate: `${formatTanggal} ${formatJam}`,
         namaReseller: row.NamaReseller,
-        productName: row.NAMAPRODUK,
-        partnerReff: row.IdTransaksiClient,
-        trxReffId: row.idtransaksi,
-        kodeProduk: row.KodeProduk,
         tujuan: row.Tujuan,
-        harga: row.HARGAJUAL,
-        status: row.STATUSTRANSAKSI === 1 ? "Success" : "Failed",
+        kodeProduk: row.KodeProduk,
+        productName: row.NAMAPRODUK,
+        hargaBeli: row.HARGABELI,
+        hargaJual: row.HARGAJUAL,
+        status: row.STATUSTRANSAKSI === 1 ? "SUKSES" : "GAGAL",
         serialNumber: row.SN,
+        namaTerminal: row.namaterminal,
         beginBalance: getBalance(
           row.STATUSTRANSAKSI,
           row.NamaReseller,
@@ -140,7 +144,8 @@ const getDataFromDatabase = async (yesterday) => {
     });
 
     worksheet.getColumn("I").numFmt = '"Rp"#,##0';
-    worksheet.getColumn("L").numFmt = '"Rp"#,##0';
+    worksheet.getColumn("J").numFmt = '"Rp"#,##0';
+    worksheet.getColumn("N").numFmt = '"Rp"#,##0';
 
     const fileName = `FILE DATABASE PPOB ${moment(yesterday).format(
       "DDMMYYYY"
