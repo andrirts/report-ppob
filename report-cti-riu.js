@@ -53,7 +53,7 @@ const getDataFromDatabase = async (yesterday) => {
       JOIN masterreseller mr
       ON mr.idreseller = th.IDRESELLER
       WHERE TANGGAL = ?
-      AND p.KodeProduk IN ('TDF500','TDF1','TDF2','TD2.5GB5D','TD3GB5D','TD7GB7D','TD10GB30D')
+      AND p.KodeProduk IN ('TDF500','TDF1','TDF2','TD2.5GB5D','TD3GB5D','TD7GB7D','TD10GB30D','TD5GB30D','TD15GB30D','TD5GB30DR','TD15GB30DR','TD5GB30DC','TD15GB30DC')
       `;
     // Get yesterday's date
     const values = [yesterday];
