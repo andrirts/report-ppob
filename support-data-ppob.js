@@ -46,7 +46,7 @@ const getDataFromDatabase = async (yesterday) => {
 
   try {
     const db = await client();
-    const query = `SELECT th.TANGGAL, th.NamaReseller, th.JAM, p.NAMAPRODUK, th.IdTransaksiClient, th.idtransaksi, p.KodeProduk, th.Tujuan, th.HARGAJUAL, th.HARGABELI, th.STATUSTRANSAKSI, th.SN, mr.email, th.namaterminal 
+    const query = `SELECT th.TANGGAL, th.NamaReseller, th.JAM, p.NAMAPRODUK, th.IdTransaksiClient, th.idtransaksi, p.KodeProduk, th.Tujuan, th.HARGAJUAL, th.HARGABELI, th.STATUSTRANSAKSI, th.SN, mr.email, th.namaterminal, th.JENISTRANSAKSI 
       FROM transaksi th
       JOIN produk p
       ON p.KodeProduk = th.KodeProduk
@@ -75,6 +75,7 @@ const getDataFromDatabase = async (yesterday) => {
       { header: "Nama Terminal", key: "namaTerminal", width: 30 },
       { header: "Begin Balance", key: "beginBalance", width: 30 },
       { header: "Email Reseller", key: "emailReseller", width: 30 },
+      { header: "Jenis Transaksi", key: "jenisTransaksi", width: 30 },
     ];
 
     worksheet.getRow(1).font = { bold: true };
@@ -109,6 +110,18 @@ const getDataFromDatabase = async (yesterday) => {
         return resellerBalance[namaReseller];
       };
 
+      const getJenisTransaksi = (jenisTransaksi) => {
+        if (jenisTransaksi === 1) {
+          return "BELI";
+        } else if (jenisTransaksi === 5) {
+          return "CEK";
+        } else if (jenisTransaksi === 6) {
+          return "BAYAR";
+        } else {
+          return "LAINNYA";
+        }
+      };
+
       worksheet.addRow({
         date: formatTanggal,
         trxReffId: row.idtransaksi,
@@ -129,6 +142,7 @@ const getDataFromDatabase = async (yesterday) => {
           row.HARGAJUAL
         ),
         emailReseller: row.email,
+        jenisTransaksi: getJenisTransaksi(row.JENISTRANSAKSI),
       });
 
       worksheet.getRow(worksheet.lastRow.number).eachCell((cell) => {
