@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const client = require("./db");
 const moment = require("moment");
+const cron = require("node-cron");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -136,6 +137,8 @@ const generateEmailData = async (data) => {
 
   return table;
 };
+
+console.log("Scheduling daily email at 08:00 AM");
 
 cron.schedule("0 8 * * *", async () => {
   await getDataFromDatabase();
