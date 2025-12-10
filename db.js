@@ -1,18 +1,19 @@
-const { createConnection } = require('mysql2/promise');
+const { createConnection } = require("mysql2/promise");
+require("dotenv").config();
 
 const connection = async () => {
-    try {
-        const connection = await createConnection({
-            user: 'RTS',
-            host: '110.239.90.35',
-            database: 'avr',
-            password: 'RTS@0808',
-            port: 3308
-        });
-        return connection;
-    } catch (err) {
-        throw err;
-    }
-}
+  try {
+    const connection = await createConnection({
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: process.env.DB_PORT,
+    });
+    return connection;
+  } catch (err) {
+    throw err;
+  }
+};
 
-module.exports = connection
+module.exports = connection;
