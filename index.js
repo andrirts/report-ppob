@@ -137,4 +137,10 @@ const generateEmailData = async (data) => {
   return table;
 };
 
-getDataFromDatabase();
+cron.schedule("0 8 * * *", async () => {
+  await getDataFromDatabase();
+});
+
+// (async () => {
+//   await getDataFromDatabase();
+// })();
