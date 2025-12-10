@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
 const client = require("./db");
 const moment = require("moment");
-const ENV = require("./env");
 require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
@@ -10,15 +9,15 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: ENV.EMAIL,
-    pass: ENV.PASSWORD,
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
 });
 
 const mailOptions = {
   from: {
     name: "Product RTS",
-    address: ENV.EMAIL,
+    address: process.env.EMAIL,
   },
   to: ["prod@rts.id", "biz@rts.id", "ops@rts.id", "sm@rts.id"],
   subject: "RTS Sync : PPOB Transactions Summary",

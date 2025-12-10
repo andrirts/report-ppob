@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const client = require("./db");
 const moment = require("moment");
-const ENV = require("./env");
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
@@ -14,15 +14,15 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: ENV.EMAIL,
-    pass: ENV.PASSWORD,
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD,
   },
 });
 
 const mailOptions = {
   from: {
     name: "Product RTS",
-    address: ENV.EMAIL,
+    address: process.env.EMAIL,
   },
   to: ["aris.riadi@finnet.co.id", "argy@finnet.co.id", "sherin@finnet.co.id"],
   cc: [
