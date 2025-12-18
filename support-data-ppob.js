@@ -111,11 +111,11 @@ const getDataFromDatabase = async (yesterday) => {
       };
 
       const getJenisTransaksi = (jenisTransaksi) => {
-        if (jenisTransaksi === 1) {
+        if (jenisTransaksi === "1") {
           return "BELI";
-        } else if (jenisTransaksi === 5) {
+        } else if (jenisTransaksi === "5") {
           return "CEK";
-        } else if (jenisTransaksi === 6) {
+        } else if (jenisTransaksi === "6") {
           return "BAYAR";
         } else {
           return "LAINNYA";
