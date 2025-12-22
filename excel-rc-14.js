@@ -34,6 +34,10 @@ const mailOptions = {
     "ita.widyarini@gmail.com",
     "eko@rts.id",
     "zabil@rts.id",
+    "bagus@rts.id",
+    "heri@rts.id",
+    "mnaseem@rts.id",
+    "m.yusuf@rts.id",
   ],
   subject: "Handling RC 14 Finnet",
 };
