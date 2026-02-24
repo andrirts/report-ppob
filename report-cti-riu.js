@@ -72,6 +72,7 @@ const getDataFromDatabase = async (yesterday) => {
       { header: "Date", key: "date", width: 30 },
       { header: "Final Status", key: "finalStatus", width: 30 },
       { header: "Serial Number", key: "finalSerialNumber", width: 30 },
+      { header: "Remarks", key: "remarks", width: 30 },
     ];
 
     worksheet.getRow(1).font = { bold: true };
@@ -108,6 +109,16 @@ const getDataFromDatabase = async (yesterday) => {
           return row.HARGABELI;
         }
       };
+
+      const getRemarks = (status) => {
+        if (status === 1) {
+          if (row.SN === "") {
+            return "Suspect";
+          }
+          return "";
+        }
+        return "";
+      };
       worksheet.addRow({
         date: formatTanggal,
         transactionDate: `${formatTanggal} ${formatJam}`,
@@ -121,6 +132,7 @@ const getDataFromDatabase = async (yesterday) => {
         serialNumber: row.SN,
         finalStatus: "",
         finalSerialNumber: "",
+        remarks: getRemarks(row.STATUSTRANSAKSI),
       });
 
       worksheet.getRow(worksheet.lastRow.number).eachCell((cell) => {
