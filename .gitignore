@@ -2,3 +2,4 @@ node_modules
 a.js
 .env
 package-lock.json
+credentials.json

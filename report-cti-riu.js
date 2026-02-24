@@ -25,7 +25,7 @@ const mailOptions = {
     name: "Product RTS",
     address: process.env.EMAIL,
   },
-  to: ["operation@rts.id"],
+  to: ["operation@rts.id", "cprisilliaparlin0604@gmail.com"],
   cc: ["ops@rts.id", "prod@rts.id"],
 };
 
@@ -138,7 +138,7 @@ const getDataFromDatabase = async (yesterday) => {
     worksheet.getColumn("G").numFmt = '"Rp"#,##0';
 
     const fileName = `Report Telkomsel ${moment(yesterday).format(
-      "DD MMMM YYYY"
+      "DD MMMM YYYY",
     )}.xlsx`;
     await workbook.xlsx.writeFile(fileName);
     console.log(`File saved as ${fileName}`);
@@ -202,7 +202,7 @@ const sendEmail = async () => {
 
 console.log("Cron job started");
 
-cron.schedule("5 9 * * *", async () => {
+cron.schedule("1 8 * * *", async () => {
   await sendEmail();
 });
 
