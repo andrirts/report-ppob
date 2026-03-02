@@ -94,7 +94,11 @@ const getDataFromDatabase = async (yesterday) => {
       const formatJam = moment(row.JAM, "HH:mm:ss").format("HH:mm:ss");
 
       const getResellerName = (resellerName) => {
-        const resellerList = ["PT VIA YOTTA BYTE", "PT SATRIA ABADI TERPADU"];
+        const resellerList = [
+          "PT VIA YOTTA BYTE",
+          "PT SATRIA ABADI TERPADU",
+          "RIU - PT GRAB TEKNOLOGI INDONESIA (KUDO)",
+        ];
         if (resellerList.includes(resellerName)) {
           return resellerName;
         } else {
