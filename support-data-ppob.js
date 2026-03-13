@@ -139,7 +139,7 @@ const getDataFromDatabase = async (yesterday) => {
         beginBalance: getBalance(
           row.STATUSTRANSAKSI,
           row.NamaReseller,
-          row.HARGAJUAL
+          row.HARGAJUAL,
         ),
         emailReseller: row.email,
         jenisTransaksi: getJenisTransaksi(row.JENISTRANSAKSI),
@@ -162,7 +162,7 @@ const getDataFromDatabase = async (yesterday) => {
     worksheet.getColumn("N").numFmt = '"Rp"#,##0';
 
     const fileName = `FILE DATABASE PPOB ${moment(yesterday).format(
-      "DDMMYYYY"
+      "DDMMYYYY",
     )}.xlsx`;
     await workbook.xlsx.writeFile(fileName);
     console.log(`File saved as ${fileName}`);
@@ -226,7 +226,7 @@ const sendEmail = async () => {
 
 console.log("Cron job started");
 
-cron.schedule("0 9 * * *", async () => {
+cron.schedule("1 9 * * *", async () => {
   await sendEmail();
 });
 
