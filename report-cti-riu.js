@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer");
-const client = require("./db");
+const client = require("./mysql");
 const moment = require("moment");
 const ExcelJs = require("exceljs");
 require("dotenv").config();
@@ -57,7 +57,7 @@ const getDataFromDatabase = async (yesterday) => {
     // Get yesterday's date
     const values = [yesterday];
 
-    const [rows] = await db.query(query, values);
+    const rows = db.query(query, values).stream();
 
     worksheet.columns = [
       { header: "IDTRX", key: "trxReffId", width: 30 },
@@ -89,7 +89,7 @@ const getDataFromDatabase = async (yesterday) => {
       };
     });
 
-    rows.forEach((row) => {
+    for await (const row of rows) {
       const formatTanggal = moment(row.TANGGAL).format("YYYY-MM-DD");
       const formatJam = moment(row.JAM, "HH:mm:ss").format("HH:mm:ss");
 
@@ -149,7 +149,7 @@ const getDataFromDatabase = async (yesterday) => {
           right: { style: "thin" },
         };
       });
-    });
+    }
 
     worksheet.getColumn("G").numFmt = '"Rp"#,##0';
 
@@ -216,7 +216,7 @@ const sendEmail = async () => {
   }
 };
 
-console.log("Cron job started");
+console.log("Cron job started " + moment().format("YYYY-MM-DD HH:mm:ss"));
 
 cron.schedule("1 8 * * *", async () => {
   await sendEmail();
