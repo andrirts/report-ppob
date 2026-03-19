@@ -224,7 +224,7 @@ const sendEmail = async () => {
   }
 };
 
-console.log("Cron job started");
+console.log("Cron job started" + moment().format("YYYY-MM-DD HH:mm:ss"));
 
 cron.schedule("1 9 * * *", async () => {
   await sendEmail();
