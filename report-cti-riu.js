@@ -40,7 +40,12 @@ const sendMail = async (transporter, mailOptions) => {
 
 const getDataFromDatabase = async (yesterday) => {
   console.log("Script run at " + moment().format("YYYY-MM-DD HH:mm:ss"));
-  const workbook = new ExcelJs.Workbook();
+  const fileName = `Report Telkomsel ${moment(yesterday).format("DD MMMM YYYY")}.xlsx`;
+
+  const workbook = new ExcelJs.stream.xlsx.WorkbookWriter({
+    filename: fileName,
+    useStyles: true,
+  });
   const worksheet = workbook.addWorksheet("Sheet1");
 
   try {
@@ -106,7 +111,11 @@ const getDataFromDatabase = async (yesterday) => {
         }
       };
       const getPrice = (resellerName) => {
-        const resellerList = ["PT VIA YOTTA BYTE", "PT SATRIA ABADI TERPADU"];
+        const resellerList = [
+          "PT VIA YOTTA BYTE",
+          "PT SATRIA ABADI TERPADU",
+          "RIU - PT GRAB TEKNOLOGI INDONESIA (KUDO)",
+        ];
         if (resellerList.includes(resellerName)) {
           return row.HARGAJUAL;
         } else {
@@ -123,7 +132,7 @@ const getDataFromDatabase = async (yesterday) => {
         }
         return "";
       };
-      worksheet.addRow({
+      const rowExcel = worksheet.addRow({
         date: formatTanggal,
         transactionDate: `${formatTanggal} ${formatJam}`,
         namaReseller: getResellerName(row.NamaReseller),
@@ -139,7 +148,7 @@ const getDataFromDatabase = async (yesterday) => {
         remarks: getRemarks(row.STATUSTRANSAKSI),
       });
 
-      worksheet.getRow(worksheet.lastRow.number).eachCell((cell) => {
+      rowExcel.eachCell((cell) => {
         cell.font = { name: "Tahoma", size: 8 };
         cell.alignment = { horizontal: "center", vertical: "middle" };
         cell.border = {
@@ -149,14 +158,14 @@ const getDataFromDatabase = async (yesterday) => {
           right: { style: "thin" },
         };
       });
+
+      rowExcel.commit();
     }
 
     worksheet.getColumn("G").numFmt = '"Rp"#,##0';
 
-    const fileName = `Report Telkomsel ${moment(yesterday).format(
-      "DD MMMM YYYY",
-    )}.xlsx`;
-    await workbook.xlsx.writeFile(fileName);
+    await workbook.commit();
+
     console.log(`File saved as ${fileName}`);
 
     db.end();
