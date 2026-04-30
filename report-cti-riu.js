@@ -227,7 +227,7 @@ const sendEmail = async () => {
 
 console.log("Cron job started " + moment().format("YYYY-MM-DD HH:mm:ss"));
 
-cron.schedule("58 6 * * *", async () => {
+cron.schedule("0 5 * * *", async () => {
   await sendEmail();
 });
 
