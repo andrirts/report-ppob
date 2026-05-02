@@ -16,6 +16,7 @@
     "mysql2": "^3.11.3",
     "node-cron": "^4.0.5",
     "nodemailer": "^6.9.15",
-    "send-email-and-read-email": "file:"
+    "send-email-and-read-email": "file:",
+    "ssl-checker": "^3.0.1"
   }
 }
